@@ -4,18 +4,19 @@ import checks
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import matplotlib.pyplot as plt
+import copy
 
 ##########
 # Params #
 ##########
-epochs = 40
+epochs = 100
 batch_size = 32
 num_workers = 6
 learning_rate = 0.001
 momentum = 0.9
 verbose = True
 check_period = 750
+loss_rise_threshold = 3
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_workers)
@@ -26,9 +27,19 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 loss_function = nn.CrossEntropyLoss()
 
-train_loss_list = [checks.test_loss(train_loader, net, device, loss_function)]
-test_loss_list = [checks.test_loss(test_loader, net, device, loss_function)]
-accuracy_list = [checks.accuracy(test_loader, net, device)]
+train_loss = checks.test_loss(train_loader, net, device, loss_function)
+train_loss_list = [train_loss]
+test_loss = checks.test_loss(test_loader, net, device, loss_function)
+test_loss_list = [test_loss]
+accuracy = checks.accuracy(test_loader, net, device)
+accuracy_list = [accuracy]
+if verbose:
+    print(f'[epoch {0}] train loss = {train_loss:.3f}, '
+          f'test loss = {test_loss:.3f}, accuracy = {accuracy * 100:.2f}%')
+
+prev_loss = float("inf")
+loss_rise_count = 0
+best_net = copy.deepcopy(net)
 
 for epoch in range(epochs):
     train_loss = 0.0
@@ -43,27 +54,22 @@ for epoch in range(epochs):
         optimizer.step()
 
         train_loss += loss.item()
-        if i % check_period == (check_period - 1):
-            train_loss = train_loss/check_period
-            train_loss_list.append(train_loss)
-            test_loss = checks.test_loss(test_loader, net, device, loss_function)
-            test_loss_list.append(test_loss)
-            accuracy_list.append(checks.accuracy(test_loader, net, device))
-            if verbose:
-                print(f'[epoch {epoch+1}, batch {i+1}] train loss = {train_loss:.3f}, '
-                      f'test loss = {test_loss:.3f}')
-            train_loss = 0.0
+    train_loss = train_loss/i
+    train_loss_list.append(train_loss)
+    test_loss = checks.test_loss(test_loader, net, device, loss_function)
+    test_loss_list.append(test_loss)
+    if test_loss > prev_loss:
+        loss_rise_count += 1
+        if loss_rise_count >= loss_rise_threshold:
+            break
+    else:
+        best_net = copy.deepcopy(net)
+        loss_rise_count = 0
+    accuracy = checks.accuracy(test_loader, net, device)
+    accuracy_list.append(accuracy)
+    if verbose:
+        print(f'[epoch {epoch+1}] train loss = {train_loss:.3f}, '
+              f'test loss = {test_loss:.3f}, accuracy = {accuracy*100:.2f}%')
+    prev_loss = test_loss
+checks.plot(train_loss_list, test_loss_list, accuracy_list)
 
-plt.subplot(211)
-plt.plot(train_loss_list, linestyle='-.', label='training')
-plt.plot(test_loss_list, linestyle='-', label='test')
-plt.legend()
-plt.ylabel('loss')
-plt.xlabel('epochs')
-axes = plt.gca()
-axes.set_ylim(bottom=0)
-plt.subplot(212)
-plt.plot(accuracy_list, linestyle='-', label='training')
-axes = plt.gca()
-axes.set_ylim(bottom=0)
-plt.show()

@@ -1,4 +1,5 @@
 import torch
+import matplotlib.pyplot as plt
 
 
 def test_loss(test_loader, net, device, loss_function):
@@ -26,3 +27,19 @@ def accuracy(test_loader, net, device):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
         return correct/total
+
+
+def plot(train_loss, test_loss, accuracy):
+    plt.subplot(211)
+    plt.plot(train_loss, linestyle='-.', label='training')
+    plt.plot(test_loss, linestyle='-', label='test')
+    plt.legend()
+    plt.ylabel('loss')
+    plt.xlabel('epochs')
+    axes = plt.gca()
+    axes.set_ylim(bottom=0)
+    plt.subplot(212)
+    plt.plot(accuracy, linestyle='-', label='training')
+    axes = plt.gca()
+    axes.set_ylim(bottom=0)
+    plt.show()
