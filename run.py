@@ -11,7 +11,7 @@ import copy
 ##########
 epochs = 100
 batch_size = 32
-num_workers = 6
+num_workers = 10
 learning_rate = 0.001
 momentum = 0.9
 verbose = True
@@ -58,6 +58,11 @@ for epoch in range(epochs):
     train_loss_list.append(train_loss)
     test_loss = checks.test_loss(test_loader, net, device, loss_function)
     test_loss_list.append(test_loss)
+    accuracy = checks.accuracy(test_loader, net, device)
+    accuracy_list.append(accuracy)
+    if verbose:
+        print(f'[epoch {epoch+1}] train loss = {train_loss:.3f}, '
+              f'test loss = {test_loss:.3f}, accuracy = {accuracy*100:.2f}%')
     if test_loss > prev_loss:
         loss_rise_count += 1
         if loss_rise_count >= loss_rise_threshold:
@@ -65,11 +70,6 @@ for epoch in range(epochs):
     else:
         best_net = copy.deepcopy(net)
         loss_rise_count = 0
-    accuracy = checks.accuracy(test_loader, net, device)
-    accuracy_list.append(accuracy)
-    if verbose:
-        print(f'[epoch {epoch+1}] train loss = {train_loss:.3f}, '
-              f'test loss = {test_loss:.3f}, accuracy = {accuracy*100:.2f}%')
     prev_loss = test_loss
 checks.plot(train_loss_list, test_loss_list, accuracy_list)
 
