@@ -9,14 +9,14 @@ import copy
 ##########
 # Params #
 ##########
-epochs = 100
+epochs = 150
 batch_size = 32
 num_workers = 10
 learning_rate = 0.001
 momentum = 0.9
 verbose = True
 check_period = 750
-loss_rise_threshold = 3
+loss_rise_threshold = 4
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_workers)
