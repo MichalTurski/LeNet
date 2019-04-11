@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.models as models
 import copy
 
 class LeNet(nn.Module):
@@ -25,3 +26,18 @@ class LeNet(nn.Module):
         input = F.relu(self.fc1(input))
         input = F.relu(self.fc2(input))
         return F.relu(self.fc3(input))
+
+
+def ResNet():
+    net = models.resnet18(pretrained=True)
+    for param in net.parameters():
+        param.requires_grad = False
+    net.fc = nn.Linear(512, 10)
+
+    total_params = sum(p.numel() for p in net.parameters())
+    print(f'{total_params:,} total parameters.')
+    total_trainable_params = sum(
+        p.numel() for p in net.parameters() if p.requires_grad)
+    print(f'{total_trainable_params:,} training parameters.')
+
+    return net

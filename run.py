@@ -11,16 +11,22 @@ import copy
 ##########
 epochs = 150
 batch_size = 32
-num_workers = 10
+num_workers = 4
 learning_rate = 0.001
 momentum = 0.9
 verbose = True
 check_period = 750
 loss_rise_threshold = 4
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_workers)
 net = network.LeNet()
+# net = network.ResNet()
+# net = models.resnet18(pretrained=True)
+# net.fc = nn.Linear(512, 10)
+# net = models.AlexNet()
+# net.classifier[6] = nn.Linear(4096, 10)
+
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = "cuda:0"
+train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_workers)
 net.to(device)
 
 criterion = nn.CrossEntropyLoss()
