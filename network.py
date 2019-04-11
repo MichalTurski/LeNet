@@ -32,6 +32,10 @@ def ResNet():
     net = models.resnet18(pretrained=True)
     for param in net.parameters():
         param.requires_grad = False
+
+    for param in net.layer4.parameters():
+        param.requires_grad = True
+
     net.fc = nn.Linear(512, 10)
 
     total_params = sum(p.numel() for p in net.parameters())
@@ -41,3 +45,20 @@ def ResNet():
     print(f'{total_trainable_params:,} training parameters.')
 
     return net
+
+
+# def VGG():
+#     net = models.vgg11(pretrained=True)
+#     for layer in net.features():
+#         for param in layer:
+#             param.requires_grad = False
+#
+#     net.classifier[6] = nn.Linear(4096, 10)
+#
+#     total_params = sum(p.numel() for p in net.parameters())
+#     print(f'{total_params:,} total parameters.')
+#     total_trainable_params = sum(
+#         p.numel() for p in net.parameters() if p.requires_grad)
+#     print(f'{total_trainable_params:,} training parameters.')
+#
+#     return net
