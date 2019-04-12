@@ -17,6 +17,9 @@ class LeNet(nn.Module):
         self.fc2 = nn.Linear(356, 128)
         self.fc3 = nn.Linear(128, 10)
 
+        total_params = sum(p.numel() for p in self.parameters())
+        print(f'{total_params:,} total parameters.')
+
     def forward(self, input):
         input = (F.relu(self.convolution1(input)))
         input = F.relu(self.convolution2(input))
@@ -30,11 +33,11 @@ class LeNet(nn.Module):
 
 def ResNet():
     net = models.resnet18(pretrained=True)
-    for param in net.parameters():
-        param.requires_grad = False
-
-    for param in net.layer4.parameters():
-        param.requires_grad = True
+    # for param in net.parameters():
+    #     param.requires_grad = False
+    #
+    # for param in net.layer4.parameters():
+    #     param.requires_grad = True
 
     net.fc = nn.Linear(512, 10)
 

@@ -12,20 +12,16 @@ import pickle
 ##########
 epochs = 15
 batch_size = 32
-num_workers = 4
-learning_rate = 0.005
+num_workers = 6
+learning_rate = 0.001
 momentum = 0.9
 verbose = True
 check_period = 750
-loss_rise_threshold = 5
+loss_rise_threshold = 20
 # net = network.LeNet()
-net = pickle.load(open( "best_net.pickle", "rb"))
+net = pickle.load(open("best_net_unfreezed1.pickle", "rb"))
 # net = network.ResNet()
-# net = network.VGG()
-# net = models.resnet18(pretrained=True)
-# net.fc = nn.Linear(512, 10)
-# net = models.AlexNet()
-# net.classifier[6] = nn.Linear(4096, 10)
+# net = net work.VGG()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_workers)
@@ -85,6 +81,9 @@ for epoch in range(epochs):
 
     prev_loss = test_loss
 checks.plot(train_loss_list, test_loss_list, accuracy_list)
-# checks.roc_curves(best_net, test_loader, classes, device)
+checks.roc_curves(best_net, test_loader, classes, device)
 pickle.dump(best_net, open("best_net.pickle", "wb"))
+pickle.dump(train_loss_list, open("train_loss.pickle", "wb"))
+pickle.dump(test_loss_list, open("test_loss.pickle", "wb"))
+pickle.dump(accuracy_list, open("accuracy.pickle", "wb"))
 
