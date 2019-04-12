@@ -10,7 +10,7 @@ import pickle
 ##########
 # Params #
 ##########
-epochs = 15
+epochs = 130
 batch_size = 32
 num_workers = 6
 learning_rate = 0.001
@@ -19,8 +19,9 @@ verbose = True
 check_period = 750
 loss_rise_threshold = 20
 # net = network.LeNet()
-net = pickle.load(open("best_net_unfreezed1.pickle", "rb"))
+# net = pickle.load(open("best_net_unfreezed1.pickle", "rb"))
 # net = network.ResNet()
+net = network.ResNet34()
 # net = net work.VGG()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
