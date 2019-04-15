@@ -13,7 +13,9 @@ import pickle
 epochs = 40
 batch_size = 32
 num_workers = 8
-learning_rate = 0.001
+learning_rate1 = 0.001
+learning_rate2_epoch = 30
+learning_rate2 = 0.0001
 momentum = 0.9
 verbose = True
 check_period = 750
@@ -29,7 +31,7 @@ train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_w
 net.to(device)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr=learning_rate1, momentum=momentum)
 loss_function = nn.CrossEntropyLoss()
 
 train_loss = checks.test_loss(train_loader, net, device, loss_function)
@@ -48,6 +50,8 @@ loss_rise_count = 0
 best_net = copy.deepcopy(net)
 
 for epoch in range(epochs):
+    if epoch == learning_rate2_epoch:
+        optimizer = optim.SGD(net.parameters(), lr=learning_rate2, momentum=momentum)
     train_loss = 0.0
     for i, (inputs, labels) in enumerate(train_loader, 0):
         inputs = inputs.to(device)
