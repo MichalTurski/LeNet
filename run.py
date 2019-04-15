@@ -10,7 +10,7 @@ import pickle
 ##########
 # Params #
 ##########
-epochs = 40
+epochs = 80
 batch_size = 32
 num_workers = 8
 learning_rate1 = 0.001
