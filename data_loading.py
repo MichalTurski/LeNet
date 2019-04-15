@@ -5,7 +5,7 @@ import numpy as np
 
 
 def prepare_data(batch_size, num_workers):
-    null_tranform = transforms.Compose(
+    null_transform = transforms.Compose(
         [transforms.ToTensor()]
     )
     train_transform = transforms.Compose(
@@ -27,7 +27,7 @@ def prepare_data(batch_size, num_workers):
                               (0.24703223, 0.24348513, 0.26158784))])
 
     set_to_statisctics = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                             download=True, transform=null_tranform)
+                                             download=True, transform=null_transform)
     avg = (np.mean(set_to_statisctics.data, axis=(0, 1, 2))/255)
     std = (np.std(set_to_statisctics.data, axis=(0, 1, 2))/255)
     # print(avg, std)
