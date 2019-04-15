@@ -23,7 +23,8 @@ def prepare_data(batch_size, num_workers):
         #  transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     test_transform = transforms.Compose(
         [transforms.ToTensor(),
-         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+         transforms.Normalize((0.49139968, 0.48215841, 0.44653091),
+                              (0.24703223, 0.24348513, 0.26158784))])
 
     set_to_statisctics = torchvision.datasets.CIFAR10(root='./data', train=True,
                                              download=True, transform=null_tranform)
