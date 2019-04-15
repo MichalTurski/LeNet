@@ -34,7 +34,7 @@ class LeNet(nn.Module):
 def ResNet():
     net = models.resnet18(pretrained=True)
     # for param in net.parameters():
-    #     param.requires_grad = False
+        # param.requires_grad = False
     #
     # for param in net.layer4.parameters():
     #     param.requires_grad = True
@@ -68,19 +68,19 @@ def ResNet34():
 
     return net
 
+class ResNet18_extended(nn.Module):
+    def __init__(self):
+        super(ResNet18_extended, self).__init__()
+        self.resnet = models.resnet18(pretrained=True)
+        self.resnet.to("cuda:0")
+        for param in self.resnet.parameters():
+            param.requires_grad = False
 
-# def VGG():
-#     net = models.vgg11(pretrained=True)
-#     for layer in net.features():
-#         for param in layer:
-#             param.requires_grad = False
-#
-#     net.classifier[6] = nn.Linear(4096, 10)
-#
-#     total_params = sum(p.numel() for p in net.parameters())
-#     print(f'{total_params:,} total parameters.')
-#     total_trainable_params = sum(
-#         p.numel() for p in net.parameters() if p.requires_grad)
-#     print(f'{total_trainable_params:,} training parameters.')
-#
-#     return net
+        self.fc = nn.Linear(1000, 10)
+
+    def forward(self, *input):
+        res_output = F.softmax(self.resnet(input[0]))
+        return self.fc(res_output)
+
+
+
