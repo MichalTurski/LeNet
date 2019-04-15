@@ -8,7 +8,7 @@ def prepare_data(batch_size, num_workers):
         [transforms.RandomHorizontalFlip(),
          # transforms.RandomAffine(10, translate=(0.1, 0.1), scale=(0.95, 1.05)),
          transforms.RandomAffine(10, translate=(0.1, 0.1)),
-         transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+         transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.1),
          transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
          ])
