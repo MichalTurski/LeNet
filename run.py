@@ -13,11 +13,10 @@ import pickle
 epochs = 90
 batch_size = 64
 num_workers = 8
-learning_rate1 = 0.001
-learning_rate2_epoch = 30
-learning_rate2 = 0.0001
-learning_rate3_epoch = 60
-learning_rate3 = 0.00001
+learning_rate = 0.001
+lr_epoch = 20
+lr_change = 0.1
+lr_change_epoch = 10
 momentum = 0.9
 verbose = True
 check_period = 750
@@ -52,10 +51,10 @@ loss_rise_count = 0
 best_net = copy.deepcopy(net)
 
 for epoch in range(epochs):
-    if epoch == learning_rate2_epoch:
-        optimizer = optim.SGD(net.parameters(), lr=learning_rate2, momentum=momentum)
-    if epoch == learning_rate3_epoch:
-        optimizer = optim.SGD(net.parameters(), lr=learning_rate3, momentum=momentum)
+    if epoch == lr_epoch:
+        learning_rate = learning_rate * lr_change
+        lr_epoch += lr_change_epoch
+        optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=momentum)
     train_loss = 0.0
     for i, (inputs, labels) in enumerate(train_loader, 0):
         inputs = inputs.to(device)
