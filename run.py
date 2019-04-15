@@ -32,7 +32,7 @@ train_loader, test_loader, classes = data_loading.prepare_data(batch_size, num_w
 net.to(device)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=learning_rate1, momentum=momentum)
+optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=momentum)
 loss_function = nn.CrossEntropyLoss()
 
 train_loss = checks.test_loss(train_loader, net, device, loss_function)
