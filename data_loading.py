@@ -12,7 +12,7 @@ def prepare_data(batch_size, num_workers):
         [transforms.RandomHorizontalFlip(),
          # transforms.RandomAffine(15, translate=(0.2, 0.2), scale=(0.9, 1.1)),
          transforms.RandomAffine(10, translate=(0.1, 0.1)),
-         transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.15),
+         transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.2),
          transforms.ToTensor(),
          transforms.Normalize((0.49139968, 0.48215841, 0.44653091),
                               (0.24703223, 0.24348513, 0.26158784))
